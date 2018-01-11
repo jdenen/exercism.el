@@ -34,14 +34,10 @@
 
 (defun exercism-submit-buffer ()
   "Submit result of function `buffer-file-name' as a solution."
+  (interactive)
   (exercism--run-command (format "submit %s" (buffer-file-name))
-                         :success 'exercism--run-callback
-                         :failure 'exercism--run-callback))
-
-(defun exercism--run-callback (result buffer)
-  "Message RESULT message pointing to BUFFER for details."
-  (let ((result-str (upcase (symbol-name result))))
-    (message (format "%s: See %s buffer for details." result-str buffer))))
+                         :success (lambda (_) (message "Submission accepted."))
+                         :failure (lambda (_) (switch-to-buffer-other-window (current-buffer)))))
 
 (cl-defun exercism--run-command (cmd &key success failure)
   "Run exercism command CMD.
@@ -54,8 +50,8 @@ Execute SUCCESS or FAILURE callback functions depending on command outcome."
                                    (current-buffer)
                                    (format "exercism %s" cmd))
       (if (s-match success-regexp (buffer-string))
-          (funcall success 'success (buffer-string))
-        (funcall failure 'failure (buffer-string))))))
+          (funcall success (buffer-string))
+        (funcall failure (buffer-string))))))
 
 (provide 'exercism)
 ;;; exercism.el ends here
