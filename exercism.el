@@ -68,6 +68,5 @@ If callbacks don't exist, run command and open process buffer regardless of outc
             (funcall failure (buffer-string)))
         (switch-to-buffer-other-window (current-buffer))))))
 
-
 (provide 'exercism)
 ;;; exercism.el ends here
