@@ -23,6 +23,15 @@
         (mock (switch-to-buffer-other-window test-buffer))
         (call-interactively 'exercism-submit-buffer)))))
 
+(ert-deftest fetch-from-list ()
+  (let ((exercism-json-file "/path/to/exercism.json"))
+    (with-mock
+      (mock (json-read-file "/path/to/exercism.json") => '((dir . "/path/to/exercism/dir/")))
+      (mock (directory-files "/path/to/exercism/dir/" nil "[^\.]+$") => '("one" "two"))
+      (mock (completing-read "Fetch for: " '("one" "two")) => "two")
+      (mock (exercism--run-command "fetch two"))
+      (call-interactively 'exercism-fetch))))
+
 (ert-deftest run-command-success-callback ()
   "Runs SUCCESS callback if exercism command is successful."
   (with-temp-buffer

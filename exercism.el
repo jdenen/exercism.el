@@ -30,19 +30,32 @@
 
 ;;; Code:
 (require 'cl-lib)
+(require 'json)
 (require 's)
 
+(defvar exercism-json-file "~/.exercism.json"
+  "Filepath to Exercism JSON file.")
+
 (defun exercism-submit-buffer ()
-  "Submit result of function `buffer-file-name' as a solution."
+  "Submit `buffer-file-name' as a solution."
   (interactive)
   (exercism--run-command (format "submit %s" (buffer-file-name))
                          :success (lambda (_) (message "Submission accepted."))
                          :failure (lambda (_) (switch-to-buffer-other-window (current-buffer)))))
 
+(defun exercism-fetch ()
+  "Fetch a new language problem."
+  (interactive)
+  (let* ((exercism-dir (cdr (assoc 'dir (json-read-file exercism-json-file))))
+         (lang-list (directory-files exercism-dir nil "[^\.]+$"))
+         (lang (completing-read "Fetch for: " lang-list)))
+    (exercism--run-command (format "fetch %s" lang))))
+
 (cl-defun exercism--run-command (cmd &key success failure)
   "Run exercism command CMD.
 
-Execute SUCCESS or FAILURE callback functions depending on command outcome."
+If SUCCESS or FAILURE callback exists, execute depending on command outcome.
+If callbacks don't exist, run command and open process buffer regardless of outcome."
   (with-temp-buffer
     (let* ((process (concat "exercism-" (car (split-string cmd " " t))))
            (success-regexp (regexp-quote (format "Process %s finished" process))))

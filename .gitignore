@@ -9,4 +9,7 @@
 
 # Undo-tree save-files
 *.~undo-tree
+
+# Dev machines
+.DS_Store
 /TODOs.org
