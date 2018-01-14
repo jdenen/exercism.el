@@ -48,4 +48,14 @@
                     (exercism--run-command "foo arg1 arg2"
                                            :success (lambda (_) nil)
                                            :failure (lambda (x) (string= "Process exercism-foo exited abnormally with code 1" x)))))))))
+
+(ert-deftest run-command-no-callback ()
+  "Runs and command and switches to output buffer with no callbacks given."
+  (with-temp-buffer
+    (let ((test-buffer (current-buffer)))
+      (with-mock
+        (mock (current-buffer) => test-buffer)
+        (mock (start-process-shell-command "exercism-no-callback" test-buffer "exercism no-callback arg1 arg2"))
+        (mock (switch-to-buffer-other-window test-buffer))
+        (exercism--run-command "no-callback arg1 arg2")))))
 ;;; exercism-test.el ends here

@@ -49,9 +49,12 @@ Execute SUCCESS or FAILURE callback functions depending on command outcome."
       (start-process-shell-command process
                                    (current-buffer)
                                    (format "exercism %s" cmd))
-      (if (s-match success-regexp (buffer-string))
-          (funcall success (buffer-string))
-        (funcall failure (buffer-string))))))
+      (if (or success failure)
+          (if (s-match success-regexp (buffer-string))
+              (funcall success (buffer-string))
+            (funcall failure (buffer-string)))
+        (switch-to-buffer-other-window (current-buffer))))))
+
 
 (provide 'exercism)
 ;;; exercism.el ends here
