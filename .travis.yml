@@ -13,11 +13,4 @@ script:
   - cask build
   - cask clean-elc
   - cask exec ert-runner
-  - |
-    cask emacs --batch \
-    --eval "(require 'package)" \
-    --eval "(push '(\"melpa\" . \"http://melpa.org/packages/\") package-archives)" \
-    --eval "(package-initialize)" \
-    --eval "(package-refresh-contents)" \
-    -l package-lint.el \
-    -f package-lint-batch-and-exit exercism.el
+  - cask emacs --batch -l lint-exercism.el
