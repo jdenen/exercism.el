@@ -37,7 +37,7 @@
   "Filepath to Exercism JSON file.")
 
 (defun exercism-submit-buffer ()
-  "Submit `buffer-file-name' as a solution."
+  "Submit function `buffer-file-name' result as a solution."
   (interactive)
   (exercism--run-command (format "submit %s" (buffer-file-name))
                          :success (lambda (_) (message "Submission accepted."))
