@@ -13,3 +13,4 @@
 # Dev machines
 .DS_Store
 /TODOs.org
+ci.sh

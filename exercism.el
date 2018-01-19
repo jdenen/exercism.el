@@ -39,9 +39,7 @@
 (defun exercism-submit-buffer ()
   "Submit function `buffer-file-name' result as a solution."
   (interactive)
-  (exercism--run-command (format "submit %s" (buffer-file-name))
-                         :success (lambda (_) (message "Submission accepted."))
-                         :failure (lambda (_) (switch-to-buffer-other-window (current-buffer)))))
+  (exercism--run-command (format "submit %s" (buffer-file-name))))
 
 (defun exercism-fetch ()
   "Fetch a new language problem."
@@ -51,22 +49,15 @@
          (lang (completing-read "Fetch for: " lang-list)))
     (exercism--run-command (format "fetch %s" lang))))
 
-(cl-defun exercism--run-command (cmd &key success failure)
-  "Run exercism command CMD.
-
-If SUCCESS or FAILURE callback exists, execute depending on command outcome.
-If callbacks don't exist, run command and open process buffer regardless of outcome."
-  (with-temp-buffer
-    (let* ((process (concat "exercism-" (car (split-string cmd " " t))))
-           (success-regexp (regexp-quote (format "Process %s finished" process))))
-      (start-process-shell-command process
-                                   (current-buffer)
-                                   (format "exercism %s" cmd))
-      (if (or success failure)
-          (if (s-match success-regexp (buffer-string))
-              (funcall success (buffer-string))
-            (funcall failure (buffer-string)))
-        (switch-to-buffer-other-window (current-buffer))))))
+(defun exercism--run-command (cmd)
+  "Run exercism command CMD."
+  (let* ((process-name (concat "exercism-" (car (split-string cmd " " t))))
+         (process-buffer (format "*%s*" process-name)))
+    (when (get-buffer process-buffer) (kill-buffer process-buffer))
+    (with-output-to-temp-buffer process-buffer
+      (start-process-shell-command process-name
+                                   process-buffer
+                                   (format "exercism %s" cmd)))))
 
 (provide 'exercism)
 ;;; exercism.el ends here
