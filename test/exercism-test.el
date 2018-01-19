@@ -19,17 +19,6 @@
 (ert-deftest run-command ()
   "Executes an exercism CMD and writes its response to a new buffer."
   (with-mock
-    (mock (get-buffer "*exercism-cmd*") => nil)
-    (mock (start-process-shell-command "exercism-cmd"
-                                       "*exercism-cmd*"
-                                       "exercism cmd arg1 arg2"))
-    (exercism--run-command "cmd arg1 arg2")))
-
-(ert-deftest run-command-again ()
-  "Runs an exercism CMD and writes its output to a cleared buffer."
-  (with-mock
-    (mock (get-buffer "*exercism-cmd*") => t)
-    (mock (kill-buffer "*exercism-cmd*"))
     (mock (start-process-shell-command "exercism-cmd"
                                        "*exercism-cmd*"
                                        "exercism cmd arg1 arg2"))

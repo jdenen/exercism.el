@@ -52,7 +52,6 @@
   "Run exercism command CMD."
   (let* ((process-name (concat "exercism-" (car (split-string cmd " " t))))
          (process-buffer (format "*%s*" process-name)))
-    (when (get-buffer process-buffer) (kill-buffer process-buffer))
     (with-output-to-temp-buffer process-buffer
       (start-process-shell-command process-name
                                    process-buffer
