@@ -29,9 +29,7 @@
 ;; language learning platform.
 
 ;;; Code:
-(require 'cl-lib)
 (require 'json)
-(require 's)
 
 (defvar exercism-json-file "~/.exercism.json"
   "Filepath to Exercism JSON file.")
