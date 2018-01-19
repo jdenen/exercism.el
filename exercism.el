@@ -31,8 +31,9 @@
 ;;; Code:
 (require 'json)
 
-(defvar exercism-json-file "~/.exercism.json"
-  "Filepath to Exercism JSON file.")
+(defcustom exercism-json-file "~/.exercism.json"
+  "Filepath to Exercism JSON file."
+  :type 'string)
 
 (defun exercism-submit-buffer ()
   "Submit function `buffer-file-name' result as a solution."
