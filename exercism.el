@@ -40,6 +40,10 @@
   "Filepath to Exercism JSON file."
   :type 'string)
 
+(defvar exercism-mode-map
+  (make-sparse-keymap)
+  "Keymap for `exercism-mode'.")
+
 (defun exercism-submit-buffer ()
   "Submit function `buffer-file-name' result as a solution."
   (interactive)
@@ -70,7 +74,10 @@
   "Minor mode to submit Exercism solutions and fetch problems."
   :group 'exercism
   :global nil
-  :lighter " Exercism ")
+  :lighter " Exercism "
+  (let ((map exercism-mode-map))
+    (define-key map (kbd "C-c e s") #'exercism-submit-buffer)
+    (define-key map (kbd "C-c e f") #'exercism-fetch)))
 
 (with-eval-after-load
     (let* ((e-dir-locals (concat (exercism--get-directory) "/" dir-locals-file)))
