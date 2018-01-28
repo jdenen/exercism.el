@@ -31,6 +31,11 @@
 ;;; Code:
 (require 'json)
 
+(defgroup exercism nil
+  "Functions for Exercism, a programming learning platform."
+  :prefix "exercism-"
+  :group 'external)
+
 (defcustom exercism-json-file "~/.exercism.json"
   "Filepath to Exercism JSON file."
   :type 'string)
@@ -56,6 +61,12 @@
       (start-process-shell-command process-name
                                    process-buffer
                                    (format "exercism %s" cmd)))))
+
+(define-minor-mode exercism-mode
+  "Minor mode to submit Exercism solutions and fetch problems."
+  :group 'exercism
+  :global nil
+  :lighter " Exercism ")
 
 (provide 'exercism)
 ;;; exercism.el ends here
