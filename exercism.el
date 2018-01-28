@@ -72,5 +72,11 @@
   :global nil
   :lighter " Exercism ")
 
+(with-eval-after-load
+    (let* ((e-dir-locals (concat (exercism--get-directory) "/" dir-locals-file)))
+      (unless (file-exists-p e-dir-locals)
+        (with-temp-file e-dir-locals
+          (insert "((nil . ((eval . (exercism-mode t)))))")))))
+
 (provide 'exercism)
 ;;; exercism.el ends here
