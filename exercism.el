@@ -31,9 +31,18 @@
 ;;; Code:
 (require 'json)
 
+(defgroup exercism nil
+  "Functions for Exercism, a programming learning platform."
+  :prefix "exercism-"
+  :group 'external)
+
 (defcustom exercism-json-file "~/.exercism.json"
   "Filepath to Exercism JSON file."
   :type 'string)
+
+(defvar exercism-mode-map
+  (make-sparse-keymap)
+  "Keymap for `exercism-mode'.")
 
 (defun exercism-submit-buffer ()
   "Submit function `buffer-file-name' result as a solution."
@@ -43,7 +52,7 @@
 (defun exercism-fetch ()
   "Fetch a new language problem."
   (interactive)
-  (let* ((exercism-dir (cdr (assoc 'dir (json-read-file exercism-json-file))))
+  (let* ((exercism-dir (exercism--get-directory))
          (lang-list (directory-files exercism-dir nil "[^\.]+$"))
          (lang (completing-read "Fetch for: " lang-list)))
     (exercism--run-command (format "fetch %s" lang))))
@@ -56,6 +65,27 @@
       (start-process-shell-command process-name
                                    process-buffer
                                    (format "exercism %s" cmd)))))
+
+(defun exercism--get-directory ()
+  "Return Exercism directory value from `exercism-json-file'."
+  (expand-file-name (cdr (assoc 'dir (json-read-file exercism-json-file)))))
+
+(define-minor-mode exercism-mode
+  "Minor mode to submit Exercism solutions and fetch problems."
+  :group 'exercism
+  :global nil
+  :lighter " Exercism "
+  (let ((map exercism-mode-map))
+    (define-key map (kbd "C-c [ s") #'exercism-submit-buffer)
+    (define-key map (kbd "C-c [ f") #'exercism-fetch)))
+
+(with-eval-after-load
+    (if (file-exists-p exercism-json-file)
+        (let* ((e-dir-locals (concat (exercism--get-directory) "/" dir-locals-file)))
+          (unless (file-exists-p e-dir-locals)
+            (with-temp-file e-dir-locals
+              (insert "((nil . ((eval . (exercism-mode t)))))"))))
+      (message "[exercism] You should run \"exercism configure\" or configure `exercism-json-file'.")))
 
 (provide 'exercism)
 ;;; exercism.el ends here

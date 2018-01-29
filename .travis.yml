@@ -13,4 +13,4 @@ script:
   - cask build
   - cask clean-elc
   - cask exec ert-runner
-  - cask emacs --batch -l lint-exercism.el
+  - cask emacs --batch -l util/lint-exercism.el
