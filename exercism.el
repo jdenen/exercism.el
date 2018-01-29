@@ -76,8 +76,8 @@
   :global nil
   :lighter " Exercism "
   (let ((map exercism-mode-map))
-    (define-key map (kbd "C-c e s") #'exercism-submit-buffer)
-    (define-key map (kbd "C-c e f") #'exercism-fetch)))
+    (define-key map (kbd "C-c [ s") #'exercism-submit-buffer)
+    (define-key map (kbd "C-c [ f") #'exercism-fetch)))
 
 (with-eval-after-load
     (if (file-exists-p exercism-json-file)
