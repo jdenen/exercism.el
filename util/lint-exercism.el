@@ -33,6 +33,7 @@
 (package-initialize)
 (package-refresh-contents)
 
+(require 'cl-lib)
 (require 'checkdoc)
 (require 'package-lint)
 
@@ -49,9 +50,14 @@
     (kill-emacs 1)))
 
 (with-current-buffer (find-file "exercism.el")
-  (when (package-lint-buffer)
-    (exercism-lint-print "*Package-Lint*")
-    (kill-emacs 1)))
+  (let ((lint (package-lint-buffer)))
+    (when lint
+      (dolist (item lint)
+        (let ((line (car item))
+              (type (cl-caddr item))
+              (output (cl-cadddr item)))
+          (message (format "%s:%s: %s" type line output))))
+      (kill-emacs 1))))
 
 (provide 'lint-exercism)
 ;;; lint-exercism.el ends here

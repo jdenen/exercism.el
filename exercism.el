@@ -80,10 +80,12 @@
     (define-key map (kbd "C-c e f") #'exercism-fetch)))
 
 (with-eval-after-load
-    (let* ((e-dir-locals (concat (exercism--get-directory) "/" dir-locals-file)))
-      (unless (file-exists-p e-dir-locals)
-        (with-temp-file e-dir-locals
-          (insert "((nil . ((eval . (exercism-mode t)))))")))))
+    (if (file-exists-p exercism-json-file)
+        (let* ((e-dir-locals (concat (exercism--get-directory) "/" dir-locals-file)))
+          (unless (file-exists-p e-dir-locals)
+            (with-temp-file e-dir-locals
+              (insert "((nil . ((eval . (exercism-mode t)))))"))))
+      (message "[exercism] You should run \"exercism configure\" or configure `exercism-json-file'.")))
 
 (provide 'exercism)
 ;;; exercism.el ends here
